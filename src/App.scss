@@ -1,0 +1,60 @@
+@import './scss/index.scss';
+
+.App {
+  text-align: center;
+  /* background-image: linear-gradient(to right bottom, #313a46, #333e4d, #364254, #39455c, #3d4963, #3d4963, #3d4963, #3d4963, #39455c, #364254, #333e4d, #313a46); */
+
+  &__header{
+    min-height: 8vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: $primary-color;
+  
+  }
+
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.Home{
+
+  &__main-logo{
+    margin: 20px auto;
+  }
+
+  &__home-logo{
+    height: 30vmin;
+    pointer-events: none;
+  }
+
+  &__title{
+    color: #61dafb;
+  }
+
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .__home-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.success{
+  border: 1px solid $success !important;
+  background-color: $background-success !important;
+}
+
+.error{
+  border: 1px solid $error !important;
+  background-color: $background-error !important;
+}
