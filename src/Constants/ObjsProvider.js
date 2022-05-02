@@ -1,0 +1,73 @@
+export const providerParams = {
+    createUid: 0,
+    id: 0,
+    name: '',
+    status: '',
+    phoneNumber: '',
+    type: '',
+    businessName: '',
+    address: {
+        createUid: 0,
+        id: 0,
+        calle: '',
+        postalCode: '',
+        latitude: '',
+        longitude: '',
+        phoneNumber: '',
+        region: '',
+        city: '',
+        description: '',
+    },
+    category: '',
+    description: '',
+    rfc: '',
+}
+
+export const providerHeaders = {
+    providerId: 0,
+    name: "",
+    status: "AC",
+    dateType: "",
+    startDate: "",
+    finalDate: "",
+    pagination: 0
+}
+
+export const providerForm = {
+    sesionId: "SES25270322201717",
+    name: '',
+    phoneNumber: '',
+    type: "PRO",
+    mail: '',
+    rfc: '',
+    category: '',
+    businessName: '',
+    calle: '',
+    region: '',
+    PostalCode: '',
+    latitud: '',
+    longitud: '',
+    phoneNumberA: "0000",
+    city: '',
+    descriptionA: '',
+};
+
+export const providerFormValid = {
+    sesionId: false,
+    name: false,
+    phoneNumber: false,
+    type: false,
+    mail: false,
+    rfc: false,
+    category: false,
+    description: false,
+    businessName: false,
+    street: false,
+    colonia: false,
+    PostalCode: false,
+    latitud: false,
+    longitud: false,
+    phoneNumberA: false,
+    city: false,
+    descriptionA: false,
+};

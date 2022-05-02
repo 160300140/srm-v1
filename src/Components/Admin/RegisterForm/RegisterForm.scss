@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "../../../scss/index.scss";
 
 .register-form {
@@ -14,12 +16,12 @@
   &__input {
     .ant-input-prefix {
       i {
-        font-size: 0em + 19px / $defaultFontSize;
+        font-size: 0em + math.div(19px, $defaultFontSize);
       }
     }
 
     input {
-      font-size: 0em + 19px / $defaultFontSize;
+      font-size: 0em + math.div(19px, $defaultFontSize);
       //padding: 20px 20px 20px 40px !important;
       &:focus {
         border-color: $primary-color;
@@ -30,7 +32,7 @@
 
   &__button {
     width: 100%;
-    font-size: 0em + 22px / $defaultFontSize;
+    font-size: 0em + math.div(22px, $defaultFontSize);
     background-color: $primary-color;
     color: $font-light;
     height: 42px;
@@ -59,7 +61,7 @@
 }
 
 .ant-layout{
-  padding: 20px;
-  background: transparent;
+  //padding: 14px;
+  background: #f4f7fa;
 }
 

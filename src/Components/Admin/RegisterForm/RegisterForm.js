@@ -1,15 +1,24 @@
 import React, { useState } from "react";
 import { Form, Button, Checkbox, notification, Input } from "antd";
-import { UserOutlined, LockOutlined, EyeTwoTone, EyeInvisibleOutlined, MailOutlined } from '@ant-design/icons';
-import { emailValidation, minLengthValidation } from "../../../Utils/formValidation";
-import { signUpApi } from '../../../Api/user';
+import {
+  UserOutlined,
+  LockOutlined,
+  EyeTwoTone,
+  EyeInvisibleOutlined,
+  MailOutlined,
+} from "@ant-design/icons";
+import {
+  emailValidation,
+  minLengthValidation,
+} from "../../../Utils/formValidation";
+import { signUpApi } from "../../../Api/user";
 
 import "./RegisterForm.scss";
 
 export default function RegisterForm() {
 
+  //#region constants
   const [inputs, setInputs] = useState({
-
     //profile: "AD",
     name: "",
     lastName: "",
@@ -22,8 +31,6 @@ export default function RegisterForm() {
     //status: "AC",
     privacyPolicy: false,
     //sesionId: "05",
-
-
   });
 
   const [formValid, setFormValid] = useState({
@@ -38,22 +45,21 @@ export default function RegisterForm() {
     confirmPassword: false,
     //status:false,
     //sesionId:false,
-    privacyPolicy: false
-
-
+    privacyPolicy: false,
   });
+  //#endregion constants
 
+  //#region functions
   const changeForm = (event) => {
-
     if (event.target.name === "privacyPolicy") {
       setInputs({
         ...inputs,
-        [event.target.name]: event.target.checked
+        [event.target.name]: event.target.checked,
       });
     } else {
       setInputs({
         ...inputs,
-        [event.target.name]: event.target.value
+        [event.target.name]: event.target.value,
       });
     }
     /* TEST VALUES */
@@ -61,7 +67,7 @@ export default function RegisterForm() {
     console.log(event.target.name);
   };
 
-  const inputValidation = e => {
+  const inputValidation = (e) => {
     const { type, name } = e.target;
 
     if (type === "email") {
@@ -75,7 +81,7 @@ export default function RegisterForm() {
     }
   };
 
-  const register = async e => {
+  const register = async (e) => {
     e.preventDefault();
     console.log(inputs);
 
@@ -91,14 +97,23 @@ export default function RegisterForm() {
     //const sesionIdVal = inputs.sesionId;
     const privacyPolicyVal = inputs.privacyPolicy;
 
-
-    if (!nameVal || !lastNameVal || !positionVal || !surNameVal || !emailVal || !passwordVal || !confirmPasswordVal || !privacyPolicyVal) {
-      notification['error']({ message: "Todos los campos son obligatorios" });
+    if (
+      !nameVal ||
+      !lastNameVal ||
+      !positionVal ||
+      !surNameVal ||
+      !emailVal ||
+      !passwordVal ||
+      !confirmPasswordVal ||
+      !privacyPolicyVal
+    ) {
+      notification["error"]({ message: "Todos los campos son obligatorios" });
     } else {
       if (passwordVal !== confirmPasswordVal) {
-        notification["error"]({ message: "Las contraseñas deben que ser iguales" });
+        notification["error"]({
+          message: "Las contraseñas deben que ser iguales",
+        });
       } else {
-
         //notification["success"]({message:"Cuenta creada"});
         const results = await signUpApi(inputs);
 
@@ -118,13 +133,12 @@ export default function RegisterForm() {
           body:JSON.stringify(inputs)
         }).then(() =>{console.log("Nuevo usuario creado")})
         */
-
       }
     }
   };
 
   const resetForm = () => {
-    const inputs = document.getElementsByTagName('input');
+    const inputs = document.getElementsByTagName("input");
 
     for (let i = 0; i < inputs.length; i++) {
       inputs[i].classList.remove("success");
@@ -143,8 +157,7 @@ export default function RegisterForm() {
       confirmPassword: "",
       //status: "AC",
       //sesionId: "0",
-      privacyPolicy: false
-
+      privacyPolicy: false,
     });
 
     setFormValid({
@@ -159,16 +172,19 @@ export default function RegisterForm() {
       confirmPassword: false,
       //status:false,
       //sesionId:false,
-      privacyPolicy: false
-
+      privacyPolicy: false,
     });
-  }
+  };
+  //#endregion functions
 
+  //#region return
   return (
     <Form className="register-form" onSubmit={register} onChange={changeForm}>
       <Form.Item>
         <Input
-          addonAfter={<UserOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+          addonAfter={
+            <UserOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+          }
           type="text"
           name="name"
           placeholder="Nombre(s)"
@@ -179,7 +195,9 @@ export default function RegisterForm() {
       </Form.Item>
       <Form.Item>
         <Input
-          addonAfter={<UserOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+          addonAfter={
+            <UserOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+          }
           type="text"
           name="lastName"
           placeholder="Apellido paterno"
@@ -190,7 +208,9 @@ export default function RegisterForm() {
       </Form.Item>
       <Form.Item>
         <Input
-          addonAfter={<UserOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+          addonAfter={
+            <UserOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+          }
           type="text"
           name="surName"
           placeholder="Apellido materno"
@@ -202,7 +222,9 @@ export default function RegisterForm() {
       <br />
       <Form.Item>
         <Input
-          addonAfter={<UserOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+          addonAfter={
+            <UserOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+          }
           type="text"
           name="position"
           placeholder="Rol"
@@ -214,7 +236,9 @@ export default function RegisterForm() {
       </Form.Item>
       <Form.Item>
         <Input
-          addonAfter={<MailOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+          addonAfter={
+            <MailOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+          }
           type="email"
           name="mail"
           placeholder="Correo electrónico"
@@ -225,27 +249,34 @@ export default function RegisterForm() {
       </Form.Item>
       <Form.Item>
         <Input.Password
-          prefix={<LockOutlined type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+          prefix={
+            <LockOutlined type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
+          }
           type="password"
           name="password"
           placeholder="Contraseña"
           className="register-form__input"
           onChange={inputValidation}
           value={inputs.password}
-          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+          iconRender={(visible) =>
+            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+          }
         />
       </Form.Item>
       <Form.Item>
         <Input.Password
-          prefix={<LockOutlined type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+          prefix={
+            <LockOutlined type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
+          }
           type="password"
           name="confirmPassword"
           placeholder="Repetir contraseña"
           className="register-form__input"
           onChange={inputValidation}
           value={inputs.confirmPassword}
-          iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-
+          iconRender={(visible) =>
+            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+          }
         />
       </Form.Item>
       <Form.Item>
@@ -254,15 +285,20 @@ export default function RegisterForm() {
           onChange={inputValidation}
           checked={inputs.privacyPolicy}
         >
-          He leído y acepto la política de privacidad. {/* <a className="login-form__registerLink" hr>política de privacidad</a>.*/}
+          He leído y acepto la política de privacidad.{" "}
+          {/* <a className="login-form__registerLink" hr>política de privacidad</a>.*/}
         </Checkbox>
       </Form.Item>
       <Form.Item>
-        <Button htmlType="submit" className="register-form__button" onClick={register} >
+        <Button
+          htmlType="submit"
+          className="register-form__button"
+          onClick={register}
+        >
           Crear cuenta
         </Button>
       </Form.Item>
     </Form>
-
   );
+  //#endregion return
 }

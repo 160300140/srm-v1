@@ -1,0 +1,17 @@
+.modal-client{
+    .ant-card-meta{
+        margin: 2px 0px;
+    }
+
+    .ant-card-meta-avatar{
+        padding-right: 0px;
+    }
+    .ant-modal-title{
+        font-weight: 600;
+        font-size: 18px;
+    }
+}
+
+.ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
+    padding: 8px 8px;
+}

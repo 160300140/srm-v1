@@ -1,34 +1,29 @@
 @import '../../index.scss';
 
-.menu-top{
+.menu-top {
     display: flex;
-    
 
-    button{
+    button {
         background-color: transparent;
         color: $menu-light-background;
+        font-size: 17px;
 
-        &hover{
+        &hover {
             color: $primary-color;
         }
 
         &:focus,
-        &:active{
+        &:active {
             color: $theme-font-light;
         }
     }
 
-    &__left{
-        
+    &__left {
 
-        &-logo{
-            width: 70px;
-            padding: 0 10px;
+
+        &-logo {
+            width: 120px;
+            margin: 13px 40px;
         }
-    }
-
-    &__right{
-        position: absolute;
-        right: 0px;
     }
 }

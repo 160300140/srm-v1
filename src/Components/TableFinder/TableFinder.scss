@@ -1,0 +1,16 @@
+.ant-card-head{
+    font-size: 20px;
+    color: #000000d9;
+    font-weight: 500;
+    font-size: 25px;
+}
+
+@media (max-width: 575px){
+
+    .ant-form-item .ant-form-item-label {
+        /* padding: 0 0 8px; */
+        line-height: 1.5715;
+        white-space: initial;
+        text-align: left;
+    }
+}

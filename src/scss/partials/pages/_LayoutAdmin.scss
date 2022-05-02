@@ -16,15 +16,37 @@
         width: 100%;
         display: flex;
         padding: 0;
-        height: 65px;
+        height: 60px;
+
     }
 
     &__content{
         min-height: calc(100vh - 65px);
-        padding: 90px 25px 25px 25px;
+        padding: 30px 25px 25px 25px;
+        background-color: #e7e9eb;  // #dee2e6;
     }
 
     &__footer{
         padding: 20px;
     }
+}
+
+.ant-layout-header {
+    //position: absolute;
+    //z-index: 1;
+    padding: 0;
+    background-image: linear-gradient(to right, #162642, #182947, #1a2c4d, #1c3052, #1e3358, #1e3358, #1e3358, #1e3358, #1c3052, #1a2c4d, #182947, #162642); //   #162642;
+    
+}
+
+.ant-menu.ant-menu-dark, .ant-menu-dark .ant-menu-sub, .ant-menu.ant-menu-dark .ant-menu-sub {
+    color: rgba(255, 255, 255, 0.65);
+    background: transparent;
+    top: 39px;
+    
+}
+
+.ant-layout-sider {
+    background-image: linear-gradient(to bottom, #162642, #182947, #1a2c4d, #1c3052, #1e3358, #223a60, #254068, #294770, #2f547d, #366189, #3d6e95, #457ca1);
+    box-shadow: 6px 0px 8px 0px rgba(0,0,0,0.2);
 }

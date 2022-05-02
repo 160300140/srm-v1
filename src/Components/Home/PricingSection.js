@@ -3,16 +3,16 @@ import { Link } from 'react-router-dom';
 import PopUp from '../Home/Popup';
 
 export default function PricingSection() {
-
+    //#region return
     return (
         <section className="section-pricing" id="section-pricing">
             <div className="u-center-text u-margin-bottom-big">
                 <h2 className="heading-secondary">
-                    Most popular products
+                    Catálogo
                 </h2>
             </div>
 
-            <div className="row">
+            <div className="row" style={{ padding:'40px' }}>
                 <div className="col-1-of-3">
                     <div className="card">
                         <div className="card__side card__side--front">
@@ -20,25 +20,26 @@ export default function PricingSection() {
                                 &nbsp;
                             </div>
                             <h4 className="card__heading">
-                                <span className="card__heading-span card__heading-span--1">The Sea Explorer</span>
+                                <span className="card__heading-span card__heading-span--1">Plan básico</span>
                             </h4>
                             <div className="card__details">
                                 <ul>
-                                    <li>3 day tours</li>
-                                    <li>Up to 30 people</li>
-                                    <li>2 tour guides</li>
-                                    <li>Sleep in cozy hotels</li>
-                                    <li>Difficulty: easy</li>
+                                    <li>Módulo RH</li>
+                                    <li>Módulo CRM</li>
+                                    <li>Módulo Ventas</li>
+                                    <li>Módulo Logística</li>
+                                    <li>Módulo Compañía</li>
+                                    <li>Estadística base</li>
                                 </ul>
                             </div>
                         </div>
                         <div className="card__side card__side--back card__side--back-1">
                             <div className="card__cta">
                                 <div className="card__price-box">
-                                    <p className="card__price-only">Only</p>
-                                    <p className="card__price-value">$297</p>
+                                    <p className="card__price-only">Precio</p>
+                                    <p className="card__price-value">$524 al mes</p>
                                 </div>
-                                <Link to={"#popup"} className="btn btn--white">Buy now!</Link>
+                                <Link to={"#popup"} className="btn btn--white">Comprar</Link>
                             </div>
                         </div>
                     </div>
@@ -52,15 +53,16 @@ export default function PricingSection() {
                                 &nbsp;
                             </div>
                             <h4 className="card__heading">
-                                <span className="card__heading-span card__heading-span--2">The Forest Hiker</span>
+                                <span className="card__heading-span card__heading-span--2">Plan extendido</span>
                             </h4>
                             <div className="card__details">
                                 <ul>
-                                    <li>7 day tours</li>
-                                    <li>Up to 40 people</li>
-                                    <li>6 tour guides</li>
-                                    <li>Sleep in provided tents</li>
-                                    <li>Difficulty: medium</li>
+                                    <li>Módulo RH</li>
+                                    <li>Módulo CRM</li>
+                                    <li>Módulo Ventas</li>
+                                    <li>Módulo Logística</li>
+                                    <li>Módulo Compañía</li>
+                                    <li>Estadística avanzada</li>
                                 </ul>
                             </div>
 
@@ -68,10 +70,10 @@ export default function PricingSection() {
                         <div className="card__side card__side--back card__side--back-2">
                             <div className="card__cta">
                                 <div className="card__price-box">
-                                    <p className="card__price-only">Only</p>
-                                    <p className="card__price-value">$497</p>
+                                    <p className="card__price-only">Precio</p>
+                                    <p className="card__price-value">$700</p>
                                 </div>
-                                <Link to={PopUp} className="btn btn--white">Buy now!</Link>
+                                <Link to={PopUp} className="btn btn--white">Comprar</Link>
                             </div>
                         </div>
                     </div>
@@ -85,15 +87,16 @@ export default function PricingSection() {
                                 &nbsp;
                             </div>
                             <h4 className="card__heading">
-                                <span className="card__heading-span card__heading-span--3">The Snow Adventurer</span>
+                                <span className="card__heading-span card__heading-span--3">Plan premium</span>
                             </h4>
                             <div className="card__details">
                                 <ul>
-                                    <li>5 day tours</li>
-                                    <li>Up to 15 people</li>
-                                    <li>3 tour guides</li>
-                                    <li>Sleep in provided tents</li>
-                                    <li>Difficulty: hard</li>
+                                    <li>Módulo RH</li>
+                                    <li>Módulo CRM</li>
+                                    <li>Módulo Ventas</li>
+                                    <li>Módulo Logística</li>
+                                    <li>Módulo Compañía</li>
+                                    <li>Data WareHouse</li>
                                 </ul>
                             </div>
 
@@ -101,10 +104,10 @@ export default function PricingSection() {
                         <div className="card__side card__side--back card__side--back-3">
                             <div className="card__cta">
                                 <div className="card__price-box">
-                                    <p className="card__price-only">Only</p>
-                                    <p className="card__price-value">$897</p>
+                                    <p className="card__price-only">Precio</p>
+                                    <p className="card__price-value">Próximamante</p>
                                 </div>
-                                <Link to={"#popup"} className="btn btn--white">Buy now!</Link>
+                                <Link to={"#popup"} className="btn btn--white">Comprar</Link>
                             </div>
                         </div>
                     </div>
@@ -112,8 +115,9 @@ export default function PricingSection() {
             </div>
 
             <div className="u-center-text u-margin-top-huge">
-                <Link to={"#"} className="btn btn--green">Discover our products</Link>
+                <Link to={"#"} className="btn btn--green">Descubre nuestros productos</Link>
             </div>
         </section>
     )
+    //#endregion return
 }

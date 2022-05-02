@@ -2,11 +2,13 @@ import React from 'react';
 
 export default function FooterHome() {
 
+    //#region return
     return (
-        <footer class="footer">
-            <div class="footer__logo-box">
+        <footer className="footer">
+            <div className="footer__logo-box">
 
             </div>
         </footer>
     )
+    //#endregion return
 }

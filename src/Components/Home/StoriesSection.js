@@ -5,59 +5,57 @@ import img2 from '../../img/landscape/nat-9.jpg'
 
 export default function StoriesSection() {
 
+    //#region return
     return (
-        <section class="section-stories">
-            <div class="bg-video">
-                <video class="bg-video__content" autoplay muted loop>
-                    <source src="img/video.mp4" type="video/mp4" />
-                    <source src="img/video.webm" type="video/webm" />
-                    Your browser is not supported!
+        <section className="section-stories" style={{ padding:'40px' }}>
+            <div className="bg-video">
+                <video className="bg-video__content" autoPlay muted loop>
+                    <source srcname="img/video.mp4" type="video/mp4" />
+                    <source srcname="img/video.webm" type="video/webm" />
+                    ¡No soportado!
                 </video>
             </div>
 
-            <div class="u-center-text u-margin-bottom-big">
-                <h2 class="heading-secondary">
-                    We make people genuinely happy
+            <div className="u-center-text u-margin-bottom-big">
+                <h2 className="heading-secondary" style={{color:'white'}}>
+                    Comunidad
                 </h2>
             </div>
 
-            <div class="row">
-                <div class="story">
-                    <figure class="story__shape">
-                        <img src={img1} alt="Person on a tour" class="story__img" />
-                        <figcaption class="story__caption">Mary Smith</figcaption>
+            <div className="row">
+                <div className="story">
+                    <figure className="story__shape">
+                        <img src={img1} alt="Person on a tour" className="story__img" />
+                        <figcaption className="story__caption">Mary Smith</figcaption>
                     </figure>
-                    <div class="story__text">
-                        <h3 class="heading-tertiary u-margin-bottom-small">I had the best experience ever</h3>
+                    <div className="story__text">
+                        <h3 className="heading-tertiary u-margin-bottom-small">Software amigable</h3>
                         <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, ipsum sapiente aspernatur
-                            libero repellat quis consequatur
-                            ducimus quam nisi exercitationem omnis earum qui.
+                        Gracias a este software, el tiempo de registro es menor y permite agilizar otras actividades para la microempresa.
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="story">
-                    <figure class="story__shape">
-                        <img src={img2} alt="Person on a tour" class="story__img" />
-                        <figcaption class="story__caption">Jack Wilson</figcaption>
+            <div className="row">
+                <div className="story">
+                    <figure className="story__shape">
+                        <img src={img2} alt="Person on a tour" className="story__img" />
+                        <figcaption className="story__caption">Jack Wilson</figcaption>
                     </figure>
-                    <div class="story__text">
-                        <h3 class="heading-tertiary u-margin-bottom-small">WOW! My business is a different experience</h3>
+                    <div className="story__text">
+                        <h3 className="heading-tertiary u-margin-bottom-small">Software intuitivo</h3>
                         <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, ipsum sapiente aspernatur
-                            libero repellat quis consequatur
-                            ducimus quam nisi exercitationem omnis earum qui.
+                        Este sistema tiene una organización de los módulos intuitivo, el cual me permite agilizar y explicar a mis colaboradores las actividades a realizar.
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div class="u-center-text u-margin-top-huge">
-                <Link to={"#"} class="btn-text">Read all stories &rarr;</Link>
+            <div className="u-center-text u-margin-top-huge">
+                <Link to={"#"} className="btn-text">Read all stories &rarr;</Link>
             </div>
         </section>
     )
+    //#endregion return
 }

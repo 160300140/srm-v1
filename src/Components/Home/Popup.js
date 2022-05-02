@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function PopUp() {
+    //#region return
     return (
         <div className="popup" id="popup">
             <div className="popup__content">
@@ -20,4 +21,5 @@ export default function PopUp() {
             </div>
         </div>
     )
+    //#endregion return
 }

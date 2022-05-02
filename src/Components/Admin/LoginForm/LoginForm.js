@@ -1,26 +1,30 @@
 import React, { useState } from "react";
-import { Form, Input, Button, notification, message, Modal } from 'antd';
+import { Form, Input, Button, notification, Modal } from 'antd';
 import { UserOutlined, LockOutlined, EyeInvisibleOutlined, EyeTwoTone, UserAddOutlined } from '@ant-design/icons';
-//import { singnInApi } from '../../../api/user';
 import { singnInApi } from '../../../Api/user';
-import RegisterForm from '../../../Components/Admin/RegisterForm';
+import RegisterForm from '../RegisterForm';
 
 
 import "./LoginForm.scss";
 
-export default function LoginForm() {
+export default function LoginForm(props) {
+  //console.log( "TEST PROPS LOGINFORM" + props);
 
-
+  //#region constants
   const [inputs, setInputs] = useState({
-
     sesionId: "0",
-    userName: "",
+    mail: "",
     password: ""
-
   });
+  const [visible, setVisible] = React.useState(false);
+  //#endregion constants
+
+  //#region functions
+  const showModal = () => {
+    setVisible(true);
+  };
 
   const changeForm = (e) => {
-
     setInputs({
       ...inputs,
       [e.target.name]: e.target.value
@@ -30,10 +34,29 @@ export default function LoginForm() {
     //console.log( "TEST: changeForm:target.value " + e.target.value);
   };
 
-  const login = async e => {
-
+  const loginTest = e => {
     e.preventDefault();
 
+    if (inputs.mail && inputs.password) {
+      console.dir("Receiving data for login" + inputs.mail + " " + inputs.password);
+      setInputs({
+        name: inputs.mail,
+        password: inputs.password
+
+      });
+
+    } else {
+      console.log("Null data")
+    }
+
+    //console.log("TEST SUBMIT logintest" + JSON.stringify(inputs));
+    //console.log("TEST SUBMIT logintest mail" + JSON.stringify(inputs.mail));
+
+
+  }
+
+  const login = async e => {
+    e.preventDefault();
     const result = await singnInApi(inputs);
 
     /*
@@ -41,7 +64,7 @@ export default function LoginForm() {
     console.log(resultM);
     */
 
-    if (result.message != "Proceso exitoso.") {
+    if (result.message !== "Proceso exitoso.") {
       notification["error"]({
         message: result.message
       });
@@ -58,14 +81,9 @@ export default function LoginForm() {
     console.log(" Click button working");
 
   };
+  //#endregion functions
 
-
-  const [visible, setVisible] = React.useState(false);
-
-  const showModal = () => {
-    setVisible(true);
-  };
-
+  //#region return
   return (
     <>
       <Form className="login-form" onChange={changeForm}>
@@ -73,10 +91,10 @@ export default function LoginForm() {
           <Input
             prefix={<UserOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
             type="email"
-            name="userName"
+            name="mail"
             placeholder="Correo electronico"
             className="login-form__input"
-            value={inputs.userName}
+            value={inputs.mail}
           />
         </Form.Item>
         <Form.Item>
@@ -91,12 +109,17 @@ export default function LoginForm() {
           />
         </Form.Item>
         <Form.Item>
-          <Button htmlType="submit" className="login-form__button" onClick={login}>
+          <Button htmlType="submit" className="login-form__button" onClick={login} > {/** onClick={login} */}
             Entrar
           </Button>
           <div style={{ marginTop: '16px' }}>
-            Or <a className="login-form__registerLink" onClick={showModal}>register now! </a>
-
+            <Button
+              type="text"
+              className="login-form__registerLink"
+              onClick={showModal}
+            >
+              Ó ¡Registrarme ahora!
+            </Button>
           </div>
         </Form.Item>
       </Form>
@@ -125,5 +148,6 @@ export default function LoginForm() {
 
     </>
   );
+  //#endregion return
 
 }

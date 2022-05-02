@@ -4,8 +4,8 @@ import logo from "../logo.svg"
 
 function Home() {
 
+    //#region return
     return (
-
         <div className="Home">
             <div className="Home__main-logo">
                 <img src={logo} className="Home__home-logo" alt="logo" />
@@ -13,10 +13,9 @@ function Home() {
 
             <h1 className="Home__title" >Sistema de Radiografía Microempresarial</h1>
             <br />
-
         </div>
-
     )
+    //#endregion return
 };
 
 

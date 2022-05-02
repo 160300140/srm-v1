@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import '../../../scss/index.scss';
 
 .form-group{
@@ -81,7 +83,7 @@
             width: 50%;
             //height: 60px !important;
             text-align: center;
-            font-size: 0em + 20px / $defaultFontSize;
+            font-size: 0em + math.div(20px, $defaultFontSize);
             border-top: 4px solid $border-grey !important;
             border-radius: 0 !important;
             margin: 0 !important;

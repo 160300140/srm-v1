@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import '../../../scss/index.scss';
 
 .login-form {
@@ -8,12 +10,12 @@
   &__input {
     .ant-input-prefix {
       i {
-        form-size: 0em + 19px / $defaultFontSize;
+        form-size: 0em + math.div(19px, $defaultFontSize);
       }
     }
 
     input {
-      font-size: 0em + 19px / $defaultFontSize;
+      font-size: 0em + math.div(19px, $defaultFontSize);
       //padding: 10px 10px 10px 20px !important;
       &:focus {
         border-color: $primary-color;
@@ -24,7 +26,7 @@
 
   &__button {
     width: 100%;
-    font-size: 0em + 19px / $defaultFontSize;
+    font-size: 0em + math.div(19px, $defaultFontSize);
     background-color: $primary-color;
     color: $font-light;
     height: 42px;

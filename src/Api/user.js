@@ -1,16 +1,17 @@
-import { notification, Result } from "antd";
-import { basePath, apiVersion } from "./config";
+import { notification } from "antd";
+import { basePath, apiVersion} from "./config";
 
+//#region ComunicationServer User
+export const base = `${basePath}/${apiVersion}`;
 export function signUpApi(data) {
-    const url = `${basePath}/${apiVersion}/User/CreateUser`;
+    const url = `${base}/User/CreateUser`;
     const params = {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json;charset=UTF-8"
         }
     };
-
     console.log(data);
     
     return fetch(url, params)
@@ -34,7 +35,7 @@ export function signUpApi(data) {
 }
 
 export function singnInApi(data){
-    const url = `${basePath}/${apiVersion}/User/LoginUser`;
+    const url = `${base}/User/LoginUser`;
     const params = {
         method: "POST",
         body: JSON.stringify(data),
@@ -56,5 +57,27 @@ export function singnInApi(data){
 
     //console.log(data)
     //console.log(url)
-
 }
+
+export function getUserApiList(data){
+    const url = `${base}/User/GetUser`;
+    const params = {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type" : "application/json;charset=UTF-8"
+        }
+    };
+
+    return fetch(url, params).then(response => {
+        console.log("LIST RESPONSE" + response);
+        return response.json();
+    }).then(result => {
+        console.log(result);
+        return result;
+    }).catch(err => {
+        return err.message;
+    })
+}
+
+//#endregion ComunicationServer User

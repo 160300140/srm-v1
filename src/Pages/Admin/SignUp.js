@@ -14,6 +14,7 @@ import axios from 'axios';
 */
 
 export default function SignUp() {
+    //#region return
     return (
         <div>Test</div>
         /*
@@ -59,4 +60,5 @@ export default function SignUp() {
         </div>
         */
     );
+    //#endregion return
 }
