@@ -3,6 +3,7 @@ import { Form, Input, Button, notification, Modal } from 'antd';
 import { UserOutlined, LockOutlined, EyeInvisibleOutlined, EyeTwoTone, UserAddOutlined } from '@ant-design/icons';
 import { singnInApi } from '../../../Api/user';
 import RegisterForm from '../RegisterForm';
+import { userLogin } from '../../../Constants/ObjsUser'
 
 
 import "./LoginForm.scss";
@@ -17,6 +18,7 @@ export default function LoginForm(props) {
     password: ""
   });
   const [visible, setVisible] = React.useState(false);
+  const [userName, setUserName] = useState(userLogin);
   //#endregion constants
 
   //#region functions
@@ -57,30 +59,46 @@ export default function LoginForm(props) {
 
   const login = async e => {
     e.preventDefault();
-    const result = await singnInApi(inputs);
+    const response = await singnInApi(inputs);
 
     /*
     var resultM = jsonObject.filter(obj => obj.message == "Proceso exitoso");
     console.log(resultM);
     */
 
-    if (result.message !== "Proceso exitoso.") {
+    if (response.message !== "Proceso exitoso.") {
       notification["error"]({
-        message: result.message
+        message: response.message
       });
     } else {
       //TO DO: verify access token api and accesstoken constants front
       //localStorage.setItem(ACCESS_TOKEN, accessToken);
       //localStorage.setItem(REFRESH_TOKEN, refreshToken);
-      console.log(result);
+      console.log(response);
       notification["success"]({
         message: "Login correcto."
       });
-      //window.location.href = "/admin"
-    }
-    console.log(" Click button working");
 
-  };
+      // eslint-disable-next-line no-lone-blocks
+
+      if (userLogin != null) {
+
+        //userLogin = result;
+        /* const { result } = response;
+        const user = [result];
+        user.filter(function (el) {
+          const fullName = `${el.name} ${el.lastName} ${el.surName}`;
+          setUserName(fullName);
+
+          //return fullName;
+        }); */
+        window.location.href = "/admin"
+      };
+    }
+  }
+
+  console.log("userName", userName);
+
   //#endregion functions
 
   //#region return

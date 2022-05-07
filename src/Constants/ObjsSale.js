@@ -81,13 +81,5 @@ export const saleFormValid = {
 
 export const saleCreate = {
     sesionId: "SES25270322201717",
-    currencyId: '',
-    description: '',
-    customerId: '',
-    storeId: '',
-    pPrice: '',
-    pId: '',
-    pQuantity: '',
-    pSubtotal: '',
-    pFinalPrice: '',
+    currencyId: '2',
 }

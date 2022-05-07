@@ -11,44 +11,52 @@ import {
     Avatar,
     Button,
     Divider,
+    Tooltip,
+    notification,
 } from "antd";
 import { Typography } from 'antd';
 import { MinusCircleFilled, PlusOutlined, UserOutlined } from "@ant-design/icons";
 import { singnInApi } from "../../Api/user";
 import { userHeaders } from '../../Constants/ObjsUser';
 import { getCustomerApiLst } from "../../Api/Customer";
-import { clientHeaders, clientParams } from '../../Constants/ObjsClient';
+import { clientHeaders } from '../../Constants/ObjsClient';
 import { getCompanyApiList } from "../../Api/Company";
 import { companyHeaders } from '../../Constants/ObjsCompany';
 import { getPurchaseApiList } from "../../Api/Purchase";
 import { purchaseHeaders } from '../../Constants/ObjsPurchase';
+import { saleCreate } from '../../Constants/ObjsSale';
+import { setQuotationAPi } from '../../Api/Sale';
 import "./FormAdd.scss";
 
 export default function FormAddQuoted(props) {
 
-    const { titles, register, changeForm, inputValidation } = props;
     const { Meta } = Card;
     const { Title } = Typography;
     const { TextArea } = Input;
-    const [valuesAuth] = useState(false);
-    const [inputs, setInputs] = useState(clientParams);
-    const [dataListA, setDataListA] = useState([]);
-    const [dataListB, setDataListB] = useState([]);
-    const [dataListC, setDataListC] = useState([]);
-    const [dataListCB, setDataListCB] = useState([]);
-    const [dataListD, setDataListD] = useState([]);
-    const [date, setDate] = useState([]);
-    const [listD, setListD] = useState([]);
-    const [valueId, seIdValueD] = useState();
-    const [valuePrice, setValuePrice] = useState();
-    const [valQty, setValQty] = useState();
-    const [valSub, setValSub] = useState();
-    const [valTotal, setValTotal] = useState();
+    const [ form ] = Form.useForm();
+    const [ inputs, setInputs ] = useState(saleCreate);
+    const [ values, setValues ] = useState([]);
+    const [ valuesAuth ] = useState(false);
+    const [ dataListA, setDataListA ] = useState([]);
+    const [ dataListB, setDataListB ] = useState([]);
+    const [ dataListC, setDataListC ] = useState([]);
+    const [ dataListD, setDataListD ] = useState([]);
+    const [ listD, setListD ] = useState([]);
+    const [ productIdLst, setProductIdLst ] = useState([]);
+    const [ valuePrice, setValuePrice ] = useState();
+    const [ valQty, setValQty ] = useState();
+    const [ valSub, setValSub ] = useState();
+    const [ valTotal, setValTotal ] = useState();
+    const [ discount, setDiscount ] = useState();
+    const [ amount, setAmount ] = useState();
+    const [ dataListCB, setDataListCB ] = useState([]);
+    const [ date, setDate ] = useState([]);
     const payment = ["Contado", "Anticipado", "Aplazado"];
-    const [discount, setDiscount] = useState();
-    const [AddresCom, setAddresCom] = useState();
-    const [EmailCom, setEmailCom] = useState();
-    const [PhoneCom, setPhoneCom] = useState();
+    const [ AddresCom, setAddresCom ] = useState();
+    const [ EmailCom, setEmailCom ] = useState();
+    const [ PhoneCom, setPhoneCom ] = useState();
+    const [ rfcCom, setRfcCom ] = useState();
+    const [ description, setDescription] = useState();
 
     const getDataA = async e => {
         //e.preventDefault();
@@ -64,7 +72,7 @@ export default function FormAddQuoted(props) {
             });
         }
     }
-    console.log("dataListA", dataListA);
+    //console.log("dataListA", dataListA);
 
     //LISTA DE CLIENTES
     const getDataB = async e => {
@@ -99,7 +107,7 @@ export default function FormAddQuoted(props) {
             ...inputs,
             customerId: num,
         });
-        console.log("id client", num)
+        //console.log("id client", num)
     }
 
     //LISTA DE SUCURSAL
@@ -109,6 +117,7 @@ export default function FormAddQuoted(props) {
 
         if (result !== "Failed to fetch") {
             const { storeList } = result;
+            //console.log(storeList);
 
             // eslint-disable-next-line no-array-constructor
             let dataVal = new Array();
@@ -116,10 +125,10 @@ export default function FormAddQuoted(props) {
             storeList.forEach(function (val) {
                 dataVal = {
                     name: val.name,
-                    address: `${val.address.city}, Reg/Col.${val.address.region}, C.P. ${val.address.postalCode} ${val.address.description}`,
+                    address: `${val.address.city}, Reg/Col.${val.address.region}, C.P. ${val.address.postalCode}`,
                     phone: val.phoneNumber,
                     mail: val.mail,
-                    //rfc: val.rfc, 
+                    rfc: val.coordinates, 
                 };
                 res.push(dataVal);
             });
@@ -134,7 +143,7 @@ export default function FormAddQuoted(props) {
             setDataListC(resB);
         }
     }
-    console.log("dataListCB", dataListCB);
+    //console.log("dataListCB", dataListCB);
 
     function onChangeC(value, key) {
         //e.preventDefault() 
@@ -151,20 +160,21 @@ export default function FormAddQuoted(props) {
             ...inputs,
             storeId: num,
         });
-        console.log("id store", num);
+        //console.log("id store", num);
 
-        // eslint-disable-next-line array-callback-return
-        dataListCB.filter(function (el) {
-            if (value === el.name) {
-                console.log("Dirección", el.address);
-                setAddresCom(el.address);
-                setEmailCom(el.mail);
-                setPhoneCom(el.phone);
-                return el.price;
-            }
-        });
-
-
+        if (dataListCB) {
+            // eslint-disable-next-line array-callback-return
+            dataListCB.filter(function (el) {
+                if (value === el.name) {
+                    //console.log("Dirección", el.address);
+                    setAddresCom(el.address);
+                    setEmailCom(el.mail);
+                    setPhoneCom(el.phone);
+                    setRfcCom(el.rfc);
+                    return el.price;
+                }
+            });
+        }
     }
 
     const getDataD = async e => {
@@ -173,8 +183,6 @@ export default function FormAddQuoted(props) {
 
         if (result !== "Failed to fetch") {
             const { productList } = result;
-            //console.log("fetchList", productList)
-
             // eslint-disable-next-line no-array-constructor
             let dataVal = new Array();
             let res = [];
@@ -199,7 +207,7 @@ export default function FormAddQuoted(props) {
             setListD(resObjA);
         }
     }
-    //console.log("dataListD", dataListD);
+    //console.log("listD", listD);
 
     function onChangeD(value, key) {
         console.log("producto", value);
@@ -212,33 +220,33 @@ export default function FormAddQuoted(props) {
         } else {
             value = '';
         }
-        setInputs({
-            ...inputs,
-            storeId: num,
-        });
-        seIdValueD(num);
-        console.log("id pruducto", num);
+        setProductIdLst([...productIdLst, { id: parseInt(num) }]);
+        //console.log("id pruducto", num);
 
-        console.log("List D", dataListD);
-
-        // eslint-disable-next-line array-callback-return
-        dataListD.filter(function (el) {
-            if (value === el.item) {
-                setValuePrice(el.price);
-                return el.price;
-            }
-        });
+        if (dataListD) {
+            // eslint-disable-next-line array-callback-return
+            dataListD.filter(function (el) {
+                if (value === el.item) {
+                    setValuePrice(el.price);
+                    //onsole.log("product id", el.id)
+                    return el.price;
+                }
+            });
+        }
     }
 
     function getKeyByValue(object, value) {
         return Object.keys(object).find(key => object[key] === value);
     }
 
-
-
-    const onFinish = values => {
-        console.log('Received values of form:', values);
-    };
+    useEffect(() => {
+        dataToday();
+        getDataA();
+        getDataB();
+        getDataC();
+        getDataD();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [valuesAuth]);
 
     function onChangeQty(value) {
         console.log('changed n items', value);
@@ -247,15 +255,15 @@ export default function FormAddQuoted(props) {
             const subtotal = value * valuePrice;
             setValQty(value);
             setValSub(subtotal);
-            console.log("subtotal", subtotal);
+            setValTotal(subtotal);
+            //console.log("subtotal", subtotal);
         }
-
     }
 
     function onChangeDis(value) {
         console.log('value discount', value);
         var cVal = (value / 100);
-        console.log("real discount", cVal);
+        //console.log("real discount", cVal);
         setDiscount(cVal);
         onCalcTotal(cVal, valSub);
     }
@@ -273,6 +281,9 @@ export default function FormAddQuoted(props) {
         setValTotal(finalPrice.toFixed(2));
     }
 
+    function onChangeSub(value) {
+        console.log('Subtotal', value);
+    }
 
     function onChangeTot(value) {
         console.log('final price', value);
@@ -285,19 +296,64 @@ export default function FormAddQuoted(props) {
 
     }
 
-    useEffect(() => {
-        dataToday();
-        getDataA();
-        getDataB();
-        getDataC();
-        getDataD();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [valuesAuth]);
+    const onFinish = valForm => {
+        console.log('Received values of form:', valForm);
+
+        if (valForm !== undefined) {
+            const { productLst } = valForm;
+
+            if (productIdLst) {
+                let productList = productLst.map((item, i) => Object.assign({}, item, productIdLst[i]));
+                //console.log(productList);
+
+                setInputs({
+                    ...inputs,
+                    productList,
+                });
+                // eslint-disable-next-line no-array-constructor
+                let res = [];
+                productLst.forEach(function (val) {
+                    res.push(val.discountTotal);
+                });
+                const reduce = res.reduce((a, b) => a + b, 0);
+                setAmount(reduce)
+                //console.log("SUM MOUNT", reduce);
+            }
+        }
+    };
+
+    function texArea(e) {
+        //console.log('Change:', e.target.value);
+        const text = e.target.value;
+        setDescription({
+            description: text 
+        }); 
+    }
+
+    async function submitForm(){
+        const allParams = {...saleCreate,...inputs, ...description};
+        console.log("All params", allParams);
+
+        const results = await setQuotationAPi(allParams);
+
+        if (results.success === false) {
+            notification["error"]({
+                message:
+                    "Parece que hay problemas, Intenta nuevamente.",
+            });
+        } else {
+            form.resetFields();
+            notification["success"]({
+                message: "La cotización fue creada exitosamente",
+            });
+
+        }
+    }
     //#endregion functions
 
     //#region return
     return (
-        <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+        <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
             <Space style={{ width: '100%', justifyContent: 'right' }}>
                 <Title style={{ marginBottom: '0px' }} level={3} >Cotización</Title>
             </Space>
@@ -306,129 +362,128 @@ export default function FormAddQuoted(props) {
             </Space >
 
             <Divider style={{ margin: '-5px' }} orientation="right" plain>{date}</Divider>
-            <div style={{ background:'#F0F3F4' }} >
-            <br />
-            <Space style={{ width: '100%', justifyContent: 'center', }} >
-                <Form.Item className="selectorTitle" >
-                    <Select
-                        name="storeId"
-                        onChange={onChangeC}
-                        allowClear
-                        //value={inputs.storeId}
-                        placeholder="Nombre de la empresa"
-                    >
-                        {dataListC.map((name, index) => {
-                            return (
-                                <Select.Option key={index} value={name}>
-                                    <Title level={3}>{name}</Title>
-                                </Select.Option>
-                            );
-                        })}
-                    </Select>
-                </Form.Item>
-            </Space>
-            
-            <Space style={{ marginTop: '12px', width: '100%', justifyContent: 'center', }} >
-                <span>{AddresCom}</span>
-            </Space>
-            <Space style={{ width: '100%', justifyContent: 'center', }} >
-                <span>{EmailCom}</span>
-            </Space>
-            <Space style={{ width: '100%', justifyContent: 'center', }} >
-                <span>{PhoneCom}</span>
-            </Space>
+            <div style={{ background: '#F0F3F4' }} >
+                <br />
+                <Space style={{ width: '100%', justifyContent: 'center', }} >
+                    <Form.Item className="selectorTitle" >
+                        <Select
+                            name="storeId"
+                            onChange={onChangeC}
+                            allowClear
+                            placeholder="Nombre de la empresa"
+                        >
+                            {dataListC.map((name, index) => {
+                                return (
+                                    <Select.Option key={index} value={name}>
+                                        <Title level={3}>{name}</Title>
+                                    </Select.Option>
+                                );
+                            })}
+                        </Select>
+                    </Form.Item>
+                </Space>
 
-            <Space style={{ marginTop: '10px', }}>
-                <Row gutter={[10, 0]} style={{ marginTop: '12px', marginLeft: '3em', marginRight: '0px' }}>
-                    <Col flex="0%" style={{ padding: '0', marginTop: '2.5%' }}>
-                        <Meta
-                            avatar={<Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />}
-                        />
-                    </Col>
-                    <Col flex="30%">
-                        <Form.Item>
-                            <strong>
-                                Vendedor:
-                            </strong>
-                            <Input name="seller" readOnly value={dataListA} />
-                        </Form.Item>
-                    </Col>
-                    <Col flex="30%">
-                        <Form.Item>
-                            <strong>
-                                Cliente: <span style={{ color: "tomato" }}>*</span>
-                            </strong>
-                            <Select
-                                name="customerId"
-                                onChange={onChangeB}
-                                allowClear
-                                //value={inputs.storeId}
-                                placeholder="Nombre cliente"
-                            >
-                                {dataListB.map((name, index) => {
-                                    return (
-                                        <Select.Option key={index} value={name}>
-                                            {name}
-                                        </Select.Option>
-                                    );
-                                })}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col flex="30%">
-                        <Form.Item>
-                            <strong>
-                                Condición de pago: <span style={{ color: "tomato" }}>*</span>
-                            </strong>
-                            <Select
-                                name="storeId"
-                                //onChange={onChangeCompany}
-                                allowClear
-                                //value={inputs.storeId}
-                                placeholder="Moneda"
-                            >
-                                {payment.map((name, index) => {
-                                    return (
-                                        <Select.Option key={index} value={name}>
-                                            {name}
-                                        </Select.Option>
-                                    );
-                                })}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                </Row>
-            </Space>
+                <Space style={{ marginTop: '12px', width: '100%', justifyContent: 'center', }} >
+                    <span>{AddresCom}</span>
+                </Space>
+                <Space style={{ width: '100%', justifyContent: 'center', }} >
+                    <span>{EmailCom}</span>
+                </Space>
+                <Space style={{ width: '100%', justifyContent: 'center', }} >
+                    <span>{PhoneCom}</span>
+                </Space>
+                <Space style={{ width: '100%', justifyContent: 'center', }} >
+                    <span>{rfcCom}</span>
+                </Space>
+
+                <Space style={{ marginTop: '10px', }}>
+                    <Row gutter={[10, 0]} style={{ marginTop: '12px', marginLeft: '3em', marginRight: '0px' }}>
+                        <Col flex="0%" style={{ padding: '0', marginTop: '2.5%' }}>
+                            <Meta
+                                avatar={<Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />}
+                            />
+                        </Col>
+                        <Col flex="30%">
+                            <Form.Item>
+                                <strong>
+                                    Vendedor:
+                                </strong>
+                                <Input name="seller" readOnly value={dataListA} />
+                            </Form.Item>
+                        </Col>
+                        <Col flex="30%">
+                            <Form.Item>
+                                <strong>
+                                    Cliente: <span style={{ color: "tomato" }}>*</span>
+                                </strong>
+                                <Select
+                                    name="customerId"
+                                    onChange={onChangeB}
+                                    allowClear
+                                    //value={inputs.storeId}
+                                    placeholder="Nombre cliente"
+                                >
+                                    {dataListB.map((name, index) => {
+                                        return (
+                                            <Select.Option key={index} value={name}>
+                                                {name}
+                                            </Select.Option>
+                                        );
+                                    })}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col flex="30%">
+                            <Form.Item>
+                                <strong>
+                                    Condición de pago: <span style={{ color: "tomato" }}>*</span>
+                                </strong>
+                                <Select
+                                    name="storeId"
+                                    //onChange={onChangeCompany}
+                                    allowClear
+                                    //value={inputs.storeId}
+                                    placeholder="Moneda"
+                                >
+                                    {payment.map((name, index) => {
+                                        return (
+                                            <Select.Option key={index} value={name}>
+                                                {name}
+                                            </Select.Option>
+                                        );
+                                    })}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                </Space>
             </div>
             <Divider style={{ margin: '5px', borderBottom: '#69c0ff' }}></Divider>
             <br />
             <Card style={{ marginBottom: '12px' }}>
-                <Card.Grid hoverable={false} style={{ width: '17.25em' }}><strong >Concepto</strong></Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: '5.7em' }}><strong>Cantidad</strong></Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: '7.2em' }}><strong>Precio</strong></Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: '7.1em' }}><strong>Subtotal</strong></Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: '6.2em' }}><strong>Descuento</strong></Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: '8.6em' }}><strong>Total</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '16.1em' }}><strong >Concepto</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '5.2em' }}><strong>Cantidad</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '6.8em' }}><strong>Precio</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '7.4em' }}><strong>Subtotal</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '7.1em' }}><strong>Descuento</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '9.2em' }}><strong>Total</strong></Card.Grid>
             </Card>
-            <Form.List name="users">
+            <Form.List name="productLst">
                 {(fields, { add, remove }) => (
                     <div>
                         {fields.map(({ key, name, ...restField }) => (
                             <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                <Row gutter={[10, 0]}>
+                                <Row gutter={[6, 0]}>
                                     <Col flex="auto">
                                         <Form.Item
                                             {...restField}
-                                            name={[name, 'item']}
-                                            rules={[{ required: true, message: 'Requerido' }]}
+                                            name={[name, 'product']}
                                         >
                                             <Select
-                                                name="storeId"
                                                 onChange={onChangeD}
                                                 allowClear
-                                                //value={inputs.storeId}
                                                 placeholder="Artículo"
-                                                style={{ width: '16.9em' }}
+                                                style={{ width: '16em' }}
                                             >
                                                 {listD.map((name, index) => {
                                                     return (
@@ -443,90 +498,72 @@ export default function FormAddQuoted(props) {
                                     <Col flex="auto">
                                         <Form.Item
                                             {...restField}
-                                            name={[name, 'quatity']}
-                                            rules={[{ required: true, message: 'Requerido' }]}
+                                            name={[name, 'quantity']}
                                         >
-                                            <Space direction="vertical">
-                                                <InputNumber min={1} style={{ width: '5em' }} onChange={onChangeQty} />
-                                            </Space>
+                                            <InputNumber
+                                                style={{ width: '4.5em' }}
+                                                min={0}
+                                                onChange={onChangeQty}
+                                            />
                                         </Form.Item>
                                     </Col>
                                     <Col flex="auto">
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'price']}
-                                        //rules={[{ required: true, message: 'Requerido' }]}
-                                        >
-                                            <Space direction="vertical">
+                                        <Tooltip title={valuePrice}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'price']}
+                                            >
                                                 <InputNumber
-                                                    min={0}
-                                                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                                    addonBefore="$"
+                                                    style={{ width: '6.6em' }}
                                                     onChange={onChangePrice}
-                                                //value={valuePrice}
-                                                //readOnly
                                                 />
-                                            </Space>
-                                        </Form.Item>
+                                            </Form.Item>
+                                        </Tooltip>
                                     </Col>
                                     <Col flex="auto">
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'subtotal']}
-                                        //rules={[{ required: true, message: 'Requerido' }]}
-                                        //onChange={onChange}
-                                        >
-                                            <Space direction="vertical">
+                                        <Tooltip title={valSub}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'totalAmount']}
+                                            >
                                                 <InputNumber
+                                                    addonBefore="$"
+                                                    style={{ width: '7em' }}
                                                     min={0}
-                                                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                                                    //onChange={onChangeSub}
-                                                    value={valSub}
-                                                    readOnly
+                                                    onChange={onChangeSub}
                                                 />
-                                            </Space>
-                                        </Form.Item>
+                                            </Form.Item>
+                                        </Tooltip>
                                     </Col>
                                     <Col flex="auto">
                                         <Form.Item
                                             {...restField}
                                             name={[name, 'discount']}
-                                        //rules={[{ required: true, message: 'Requerido' }]}
-                                        //formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                        //parser={value => value.replace(/\$\s?|(,*)/g, '')}
-
                                         >
-                                            <Space direction="vertical">
-                                                <InputNumber
-                                                    //defaultValue={0}
-                                                    min={0}
-                                                    max={100}
-                                                    onChange={onChangeDis}
-                                                    formatter={value => `${value}%`}
-                                                    parser={value => value.replace('%', '')}
-                                                    style={{ width: '5.5em' }}
-                                                />
-                                            </Space>
+                                            <InputNumber
+                                                addonBefore="%"
+                                                min={0}
+                                                max={100}
+                                                onChange={onChangeDis}
+                                                style={{ width: '6.6em' }}
+                                            />
                                         </Form.Item>
                                     </Col>
                                     <Col flex="auto">
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'subTotal']}
-                                            rules={[{ required: true, message: 'Requerido' }]}
-                                        >
-                                            <Space direction="vertical">
+                                        <Tooltip title={valTotal}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'discountTotal']}
+                                            >
                                                 <InputNumber
                                                     min={0}
+                                                    addonBefore="$"
                                                     onChange={onChangeTot}
-                                                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                                                    style={{ width: '8em' }}
-                                                    value={valTotal}
+                                                    style={{ width: '8.7em' }}
                                                 />
-                                            </Space>
-                                        </Form.Item>
+                                            </Form.Item>
+                                        </Tooltip>
                                     </Col>
                                     <Col flex="auto" style={{ padding: '0' }}>
                                         <MinusCircleFilled style={{ color: "tomato" }} onClick={() => remove(name)} />
@@ -539,39 +576,47 @@ export default function FormAddQuoted(props) {
                                 Agregar compra
                             </Button>
                         </Form.Item>
-                        <Form.Item>
-                            <Row gutter={[10, 0]} style={{ marginTop: '16px', marginLeft: '32em', marginRight: '0px' }}>
-                                <Col style={{ marginTop: '1.5%' }}>
-                                    <strong>
-                                        Monto total:
-                                    </strong>
-                                </Col>
-                                <Col>
-                                    <Form.Item>
-                                        <Input readOnly value={'Total'} />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col flex="58%">
-                                    <Form.Item>
-                                        <strong>Descripción:</strong>
-                                        <TextArea
-                                            placeholder="textarea with clear icon"
-                                            allowClear
-                                            name="description"
-                                            onChange={inputValidation}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                        </Form.Item>
                     </div>
                 )}
             </Form.List>
-            <Form.Item style={{ marginBottom: '12px' }}>
+            <Form.Item style={{ marginBottom: '0px' }}>
+                <Row gutter={[10, 0]} style={{ marginTop: '16px', marginLeft: '28em', marginRight: '0px' }}>
+                    <Col>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" ghost>
+                                Calcular monto
+                            </Button>
+                        </Form.Item>
+                    </Col>
+                    <Col>
+                        <Form.Item>
+                            <InputNumber
+                                style={{ width: '14em', fontWeight: 'bold' }}
+                                addonBefore="$"
+                                name="amount"
+                                value={amount}
+                                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                placeholder="Monto total"
+                                readOnly
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form.Item>
+            <Form.Item>
+                <strong>Descripción:</strong>
+                <TextArea
+                    placeholder="Agrege su texto aquí"
+                    allowClear
+                    name="description"
+                    onChange={texArea}
+                />
+            </Form.Item>
+            <br />
+            <Form.Item >
                 <Space style={{ width: '100%', justifyContent: 'center', }} >
-                    <Button type="primary" shape="round" htmlType="submit">
+                    <Button type="primary" shape="round" htmlType="submit" onClick={submitForm} >
                         Crear cotización
                     </Button>
                 </Space>

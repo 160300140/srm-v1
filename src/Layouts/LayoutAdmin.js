@@ -6,6 +6,7 @@ import MenuSider from '../Components/Admin/MenuSider';
 import AdminSignIn from '../Pages/Admin/SignIn';
 import { MenuUnfoldOutlined, PoweroffOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
+import { userLogin } from '../Constants/ObjsUser'
 import '../scss/partials/Admin/_MenuTop.scss';
 
 
@@ -16,7 +17,7 @@ export default function LayoutAdmin(props) {
     const [menuCollapsed, setMenuCollapsed] = useState(false);
     const { Header, Content, Footer } = Layout;
     let button;
-    const user = "null"; //"";
+    const user = "userLogin"; //"";
 
     //#endregion constans
 

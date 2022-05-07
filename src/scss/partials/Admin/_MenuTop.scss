@@ -19,11 +19,21 @@
     }
 
     &__left {
-
-
-        &-logo {
-            width: 120px;
+        
+        &-logo{
+            max-width: 120px;
             margin: 13px 40px;
+            transition-timing-function: ease-out;
+            transition: width 0.5s;
         }
+
+        &-logob{
+            width: 32px;
+            margin: 9px 25px;
+            transition-timing-function: ease-out;
+            transition: width 0.5s;
+        }
+
+
     }
 }

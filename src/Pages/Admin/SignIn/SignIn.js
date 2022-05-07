@@ -5,6 +5,7 @@ import { UnlockOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
 import loginimg from '../../../img/businessa.jpeg';
 import LoginForm from "../../../Components/Admin/LoginForm";
+import { userLogin } from '../../../Constants/ObjsUser'; 
 
 //#region GlobalConstans
 const { Content } = Layout;
@@ -32,7 +33,7 @@ export default function SignIn(props) {
     */
 
     //#region constans
-    const user = "null"; //"";
+    const user = "userLogin"; //"";
     //#endregion constants
 
     //#region ValidationsFunction

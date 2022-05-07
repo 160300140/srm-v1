@@ -7,23 +7,33 @@ import {
     Collapse,
     Select,
     Image,
+    Button,
 } from "antd";
 import wallet from '../../img/wallet.png';
 
 
 export default function SecondStep(props) {
-    const { titles, register, changeForm, inputValidation, onChangeCompany } = props;
+    const { setDescVal } = props;
     const { Option } = Select;
-    const { Panel } = Collapse;
     const { TextArea } = Input;
-    const [dataList, setDataList] = useState([]);
-    const [ListC, setListC] = useState([]);
+    const [ description, setDescription] = useState();
     const payment = ["Efectivo", "Otro"];
 
 
     const onFinish = values => {
         console.log('Received values of form:', values);
+        console.log("state desc", description)
+        setDescVal(description)
     };
+
+    function texArea(e) {
+        console.log('Change:', e.target.value);
+        const text = e.target.value;
+        
+        setDescription({
+            description: text 
+        });
+    }
 
     return (
         <Form onFinish={onFinish} autoComplete="off">
@@ -38,11 +48,11 @@ export default function SecondStep(props) {
                             //value={inputs.description}
                             placeholder="Información relevante"
                         /> */}
-                        <TextArea 
-                            placeholder="textarea with clear icon" 
-                            allowClear 
+                        <TextArea
+                            placeholder="Agrege su texto aquí"
+                            allowClear
                             name="description"
-                            onChange={inputValidation}
+                            onChange={texArea}
                         />
                     </Form.Item>
                 </Col>
@@ -53,9 +63,9 @@ export default function SecondStep(props) {
                         </strong>
                         <Select
                             name="storeId"
-                            onChange={onChangeCompany}
+                            //onChange={}
                             allowClear
-                            //value={inputs.storeId}
+                            //value={}
                             placeholder="Moneda"
                         >
                             {payment.map((name, index) => {
@@ -83,7 +93,7 @@ export default function SecondStep(props) {
                 </Col>
             </Row>
             <Row gutter={[28, 0]}>
-                <Col flex="65%">
+                <Col flex="auto">
                     <Form.Item>
                     </Form.Item>
                 </Col>
@@ -93,6 +103,16 @@ export default function SecondStep(props) {
                         preview={false}
                         src={wallet}
                     />
+                </Col>
+            </Row>
+            <br />
+            <Row gutter={[28, 0]}>
+                <Col flex="auto">
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit"   ghost>
+                            Confirmar
+                        </Button>
+                    </Form.Item>
                 </Col>
             </Row>
         </Form>

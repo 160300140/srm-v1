@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import { Link, withRouter } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import { HomeOutlined, TeamOutlined, AppstoreAddOutlined, AimOutlined, ShopOutlined, ShoppingOutlined } from '@ant-design/icons';
 import logoSoem1 from '../../../img/soemLogo1.png';
+import logoSoem2 from '../../../img/logo.png'
 import '../../../scss/partials/Admin/_MenuSider.scss';
 
 function MenuSider(props) {
@@ -10,7 +11,6 @@ function MenuSider(props) {
     const { menuCollapsed, location } = props;
     const { Sider } = Layout;
     const { SubMenu } = Menu;
-    //const [menuCollapsed, setMenuCollapsed] = useState(false);
     //#endregion constants
 
     //console.log(location.pathname);
@@ -19,7 +19,7 @@ function MenuSider(props) {
     return (
         <Layout>
             <Sider className="menu-sider" collapsed={menuCollapsed}>
-                <img className="menu-top__left-logo" src={logoSoem1} alt="logo" />
+            <img className={menuCollapsed? "menu-top__left-logob":"menu-top__left-logo"}  src={ menuCollapsed? logoSoem2:logoSoem1 } alt="logo" />
                 <Menu theme="dark" mode='inline' defaultSelectedKeys={[location.pathname]}>
                     <Menu.Item key="/admin">
                         <Link className="menu-sider__link" to={"/admin"}>
@@ -37,7 +37,7 @@ function MenuSider(props) {
                     <SubMenu key="sub2" icon={<ShoppingOutlined />} title="Ventas" >
                         <Menu.Item key="3">
                             <Link className="menu-sider__link" to={"/admin/quoted"}>
-                                <span className="nav-text">Cotización</span> 
+                                <span className="nav-text">Cotización</span>
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="4">

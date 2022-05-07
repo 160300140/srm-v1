@@ -6,14 +6,11 @@ import {
     Row,
     Col,
     Space,
-    Collapse,
     Select,
     Card,
     Avatar,
-    DatePicker,
-    notification,
+    Tooltip,
     Button,
-    Upload
 } from "antd";
 import { MinusCircleFilled, PlusOutlined, UserOutlined } from "@ant-design/icons";
 import { singnInApi } from "../../Api/user";
@@ -21,29 +18,30 @@ import { userHeaders } from '../../Constants/ObjsUser';
 import { getCustomerApiLst } from "../../Api/Customer";
 import { clientHeaders, clientParams } from '../../Constants/ObjsClient';
 import { getCompanyApiList } from "../../Api/Company";
-import { companyHeaders, companyParams } from '../../Constants/ObjsCompany';
+import { companyHeaders } from '../../Constants/ObjsCompany';
 import { getPurchaseApiList } from "../../Api/Purchase";
-import { purchaseHeaders, purchaseParams } from '../../Constants/ObjsPurchase';
-
-
+import { purchaseHeaders } from '../../Constants/ObjsPurchase';
 import "../FormAdd/FormAdd.scss";
 
+
 export default function FistStep(props) {
-    //const { titles, register, changeForm, inputValidation } = props;
+    const { setInputs } = props;
     const { Meta } = Card;
+    const [form] = Form.useForm();
+    const [values, setValues] = useState([]);
     const [valuesAuth] = useState(false);
-    const [inputs, setInputs] = useState(clientParams);
     const [dataListA, setDataListA] = useState([]);
     const [dataListB, setDataListB] = useState([]);
     const [dataListC, setDataListC] = useState([]);
     const [dataListD, setDataListD] = useState([]);
     const [listD, setListD] = useState([]);
-    const [valueId, seIdValueD] = useState();
+    const [productIdLst, setProductIdLst] = useState([]);
     const [valuePrice, setValuePrice] = useState();
     const [valQty, setValQty] = useState();
     const [valSub, setValSub] = useState();
     const [valTotal, setValTotal] = useState();
     const [discount, setDiscount] = useState();
+    const [amount, setAmount] = useState();
 
     const getDataA = async e => {
         //e.preventDefault();
@@ -90,11 +88,11 @@ export default function FistStep(props) {
         } else {
             value = '';
         }
-        setInputs({
-            ...inputs,
+        setValues({
+            ...values,
             customerId: num,
         });
-        console.log("id client", num)
+        //console.log("id client", num)
     }
 
     //LISTA DE SUCURSAL
@@ -126,11 +124,12 @@ export default function FistStep(props) {
         } else {
             value = '';
         }
-        setInputs({
-            ...inputs,
+
+        setValues({
+            ...values,
             storeId: num,
         });
-        console.log("id store", num)
+        //console.log("id store", num);
     }
 
     const getDataD = async e => {
@@ -139,14 +138,12 @@ export default function FistStep(props) {
 
         if (result !== "Failed to fetch") {
             const { productList } = result;
-            //console.log("fetchList", productList)
-
             // eslint-disable-next-line no-array-constructor
             let dataVal = new Array();
             let res = [];
             productList.forEach(function (val) {
                 dataVal = {
-                    idP: val.id,
+                    id: val.id,
                     item: val.name,
                     price: val.price,
                     stock: val.stock
@@ -155,7 +152,7 @@ export default function FistStep(props) {
 
             });
             setDataListD(res);
-
+            //console.log("****", productList);
             var reformattedArrA = productList.map(function (obj) {
                 var rObj = {};
                 rObj[obj.id] = obj.name;
@@ -165,7 +162,7 @@ export default function FistStep(props) {
             setListD(resObjA);
         }
     }
-    //console.log("dataListD", dataListD);
+    //console.log("listD", listD);
 
     function onChangeD(value, key) {
         console.log("producto", value);
@@ -178,23 +175,21 @@ export default function FistStep(props) {
         } else {
             value = '';
         }
-        setInputs({
-            ...inputs,
-            storeId: num,
-        });
-        seIdValueD(num);
-        console.log("id pruducto", num);
+        setProductIdLst([...productIdLst, { id: parseInt(num) }]);
+        //console.log("id pruducto", num);
 
-        console.log("List D", dataListD);
-
-        // eslint-disable-next-line array-callback-return
-        dataListD.filter(function (el) {
-            if (value === el.item) {
-                setValuePrice(el.price);
-                return el.price;
-            }
-        });
+        if (dataListD) {
+            // eslint-disable-next-line array-callback-return
+            dataListD.filter(function (el) {
+                if (value === el.item) {
+                    setValuePrice(el.price);
+                    console.log("product id", el.id)
+                    return el.price;
+                }
+            });
+        }
     }
+    //console.log("Key product", productIdLst);
 
     function getKeyByValue(object, value) {
         return Object.keys(object).find(key => object[key] === value);
@@ -208,13 +203,8 @@ export default function FistStep(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [valuesAuth]);
 
-
-    const onFinish = values => {
-        console.log('Received values of form:', values);
-    };
-
     function onChangeQty(value) {
-        console.log('changed n items', value);
+        console.log('quantity', value);
 
         if (value) {
             const subtotal = value * valuePrice;
@@ -223,7 +213,6 @@ export default function FistStep(props) {
             setValTotal(subtotal);
             console.log("subtotal", subtotal);
         }
-
     }
 
     function onChangeDis(value) {
@@ -236,8 +225,6 @@ export default function FistStep(props) {
 
     function onChangePrice(value) {
         console.log("Price", value);
-        value = valuePrice;
-
     }
 
     function onCalcTotal(a, b) {
@@ -249,11 +236,46 @@ export default function FistStep(props) {
         setValTotal(finalPrice.toFixed(2));
     }
 
-
-    function onChangeTot(value) {
-        console.log('final price', value);
+    function onChangeSub(value) {
+        console.log('Subtotal', value);
     }
 
+    function onChangeTot(values, index) {
+        console.log('final price', values);
+    }
+
+    const onFinish = valForm => {
+        console.log('Received values of form:', valForm);
+
+        if (valForm !== undefined) {
+            const { productLst } = valForm;
+
+            if (productIdLst) {
+                let productList = productLst.map((item, i) => Object.assign({}, item, productIdLst[i]));
+                //console.log(productList);
+
+                setValues({
+                    ...values,
+                    productList,
+                });
+
+                setInputs({
+                    ...values,
+                    productList,
+                });
+                // eslint-disable-next-line no-array-constructor
+                let res = [];
+                productLst.forEach(function (val) {
+                    res.push(val.discountTotal);
+                });
+                const reduce = res.reduce((a, b) => a + b, 0);
+                setAmount(reduce)
+                //console.log("SUM MOUNT", reduce);
+            }
+
+        }
+    };
+    //console.log("ALL BODY", values)
 
     return (
         <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
@@ -280,7 +302,6 @@ export default function FistStep(props) {
                             name="customerId"
                             onChange={onChangeB}
                             allowClear
-                            //value={inputs.storeId}
                             placeholder="Nombre cliente"
                         >
                             {dataListB.map((name, index) => {
@@ -302,7 +323,6 @@ export default function FistStep(props) {
                             name="storeId"
                             onChange={onChangeC}
                             allowClear
-                            //value={inputs.storeId}
                             placeholder="Sucursal"
                         >
                             {dataListC.map((name, index) => {
@@ -317,30 +337,29 @@ export default function FistStep(props) {
                 </Col>
             </Row>
             <Card style={{ marginBottom: '12px' }}>
-                <Card.Grid hoverable={false} style={{ width: '17.25em' }}><strong >Concepto</strong></Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: '5.7em' }}><strong>Cantidad</strong></Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: '7.2em' }}><strong>Precio</strong></Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: '7.1em' }}><strong>Subtotal</strong></Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: '6.2em' }}><strong>Descuento</strong></Card.Grid>
-                <Card.Grid hoverable={false} style={{ width: '8.6em' }}><strong>Total</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '16.1em' }}><strong >Concepto</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '5.2em' }}><strong>Cantidad</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '6.8em' }}><strong>Precio</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '7.4em' }}><strong>Subtotal</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '7.1em' }}><strong>Descuento</strong></Card.Grid>
+                <Card.Grid hoverable={false} style={{ width: '9.2em' }}><strong>Total</strong></Card.Grid>
             </Card>
-            <Form.List name="users">
+            <Form.List name="productLst">
                 {(fields, { add, remove }) => (
                     <div>
                         {fields.map(({ key, name, ...restField }) => (
                             <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                                <Row gutter={[10, 0]}>
+                                <Row gutter={[6, 0]}>
                                     <Col flex="auto">
                                         <Form.Item
                                             {...restField}
                                             name={[name, 'product']}
-                                            //rules={[{ required: true, message: 'Requerido' }]}
                                         >
                                             <Select
                                                 onChange={onChangeD}
                                                 allowClear
                                                 placeholder="Artículo"
-                                                style={{ width: '16.9em' }}
+                                                style={{ width: '16em' }}
                                             >
                                                 {listD.map((name, index) => {
                                                     return (
@@ -355,86 +374,72 @@ export default function FistStep(props) {
                                     <Col flex="auto">
                                         <Form.Item
                                             {...restField}
-                                            name={[name, 'quatity']}
+                                            name={[name, 'quantity']}
                                         >
-                                            <Space direction="vertical">
-                                                <InputNumber min={1} style={{ width: '5em' }} onChange={onChangeQty} />
-                                            </Space>
+                                            <InputNumber
+                                                style={{ width: '4.5em' }}
+                                                min={0}
+                                                onChange={onChangeQty}
+                                            />
                                         </Form.Item>
                                     </Col>
                                     <Col flex="auto">
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'price']}
-                                            //rules={[{ required: true, message: 'Requerido' }]}
-                                        >
-                                            <Space direction="vertical">
-                                                <Input
-                                                    min={0}
-                                                    //formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                                    //parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                                                    //onChangePrice={onChangePrice}
-                                                    onChangePrice={onChangePrice}
-                                                    //value={valuePrice}
-                                                    readOnly
-                                                />
-                                            </Space>
-                                        </Form.Item>
-                                    </Col>
-                                    <Col flex="auto">
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'subtotal']}
-                                        //rules={[{ required: true, message: 'Requerido' }]}
-                                        //onChange={onChange}
-                                        >
-                                            <Space direction="vertical">
+                                        <Tooltip title={valuePrice}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'price']}
+                                            >
                                                 <InputNumber
-                                                    min={0}
-                                                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                                                    //onChange={onChangeSub}
-                                                    value={valSub}
-                                                    readOnly
+                                                    addonBefore="$"
+                                                    style={{ width: '6.6em' }}
+                                                    onChange={onChangePrice}
                                                 />
-                                            </Space>
-                                        </Form.Item>
+                                            </Form.Item>
+                                        </Tooltip>
+                                    </Col>
+                                    <Col flex="auto">
+                                        <Tooltip title={valSub}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'totalAmount']}
+                                            >
+                                                <InputNumber
+                                                    addonBefore="$"
+                                                    style={{ width: '7em' }}
+                                                    min={0}
+                                                    onChange={onChangeSub}
+                                                />
+                                            </Form.Item>
+                                        </Tooltip>
                                     </Col>
                                     <Col flex="auto">
                                         <Form.Item
                                             {...restField}
                                             name={[name, 'discount']}
                                         >
-                                            <Space direction="vertical">
-                                                <InputNumber
-                                                    //defaultValue={0}
-                                                    min={0}
-                                                    max={100}
-                                                    onChange={onChangeDis}
-                                                    formatter={value => `${value}%`}
-                                                    parser={value => value.replace('%', '')}
-                                                    style={{ width: '5.5em' }}
-                                                />
-                                            </Space>
+                                            <InputNumber
+                                                addonBefore="%"
+                                                min={0}
+                                                max={100}
+                                                onChange={onChangeDis}
+                                                style={{ width: '6.6em' }}
+                                            />
                                         </Form.Item>
                                     </Col>
                                     <Col flex="auto">
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'finalPrice']}
-                                            //rules={[{ required: true, message: 'Requerido' }]}
-                                        >
-                                            <Space direction="vertical">
+                                        <Tooltip title={valTotal}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'discountTotal']}
+                                            >
                                                 <InputNumber
                                                     min={0}
+                                                    addonBefore="$"
                                                     onChange={onChangeTot}
-                                                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                                    parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                                                    style={{ width: '8em' }}
-                                                    value={valTotal}
+                                                    style={{ width: '8.7em' }}
                                                 />
-                                            </Space>
-                                        </Form.Item>
+                                            </Form.Item>
+                                        </Tooltip>
                                     </Col>
                                     <Col flex="auto" style={{ padding: '0' }}>
                                         <MinusCircleFilled style={{ color: "tomato" }} onClick={() => remove(name)} />
@@ -447,27 +452,33 @@ export default function FistStep(props) {
                                 Agregar compra
                             </Button>
                         </Form.Item>
-                        <Form.Item>
-                            <Row gutter={[10, 0]} style={{ marginTop: '16px', marginLeft: '32em', marginRight: '0px' }}>
-                                <Col style={{ marginTop: '1.5%' }}>
-                                    <strong>
-                                        Monto total:
-                                    </strong>
-                                </Col>
-                                <Col>
-                                    <Form.Item>
-                                        <Input readOnly value={'Total'} />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                        </Form.Item>
                     </div>
                 )}
             </Form.List>
             <Form.Item>
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
+                <Row gutter={[10, 0]} style={{ marginTop: '16px', marginLeft: '28em', marginRight: '0px' }}>
+                    <Col>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" ghost>
+                                Calcular monto
+                            </Button>
+                        </Form.Item>
+                    </Col>
+                    <Col>
+                        <Form.Item>
+                            <InputNumber
+                                style={{ width: '14em', fontWeight: 'bold' }}
+                                addonBefore="$"
+                                name="amount"
+                                value={amount}
+                                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                placeholder="Monto total"
+                                readOnly
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
             </Form.Item>
         </Form>
     );
