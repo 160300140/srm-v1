@@ -1,6 +1,6 @@
 
 //#region constants path
-export const base =  "http://ec2-18-224-0-116.us-east-2.compute.amazonaws.com:"
+export const base =  "http://ip-172-31-22-242.us-east-2.compute.internal:"
 
 //User login path
 export const basePath = `${base}9001` //"http://ec2-18-189-16-61.us-east-2.compute.amazonaws.com:9001/";
